@@ -1,0 +1,33 @@
+{
+  "name": "wetube",
+  "version": "1.0.0",
+  "description": "The best way to watch a videos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badnuclear/wetube-reloaded.git"
+  },
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/init.js"
+  },
+  "author": "badnuclear",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/badnuclear/wetube-reloaded/issues"
+  },
+  "homepage": "https://github.com/badnuclear/wetube-reloaded#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.5.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.19",
+    "pug": "^3.0.2",
+    "save-dev": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.10",
+    "@babel/node": "^7.18.10",
+    "@babel/preset-env": "^7.18.10"
+  }
+}
