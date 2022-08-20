@@ -3,17 +3,17 @@ import mongoose from "mongoose";
 
 //유져 스키마 생성
 const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
   name: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  avatarUrl: String,
+  password: { type: String },
+  socialOnly: { type: Boolean, default: false },
   location: String,
 });
 
 userSchema.pre("save", async function () {
-  console.log("user password: ", this.password);
   this.password = await bcrypt.hash(this.password, 5);
-  console.log("hash password: ", this.password);
 });
 
 const User = mongoose.model("User", userSchema);
