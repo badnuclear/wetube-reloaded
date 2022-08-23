@@ -1,7 +1,6 @@
 import User from "../models/User";
 import fetch from "cross-fetch";
 import bcrypt from "bcrypt";
-import { json, response } from "express";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 export const postJoin = async (req, res) => {
@@ -60,6 +59,7 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
+//깃허브 소셜 로그인
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
   const config = {
@@ -106,8 +106,6 @@ export const finishGithubLogin = async (req, res) => {
       })
     ).json();
 
-    console.log(userData);
-
     const emailObj = emailData.find(
       (email) => email.primary === true && email.verified === true
     );
@@ -133,10 +131,38 @@ export const finishGithubLogin = async (req, res) => {
     return res.redirect("/login");
   }
 };
+
+//로그아웃
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
 
-export const edit = (req, res) => res.send("Edit User");
+//카카오 로그인
+
+//프로필 수정
+export const getEdit = (req, res) => {
+  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { name, username, email, location },
+  } = req;
+  const updateUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      username,
+      email,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updateUser;
+  return res.redirect("/users/edit");
+};
+
 export const see = (req, res) => res.send("See user");
