@@ -28,7 +28,6 @@ export const postJoin = async (req, res) => {
     });
     return res.redirect("/login");
   } catch (error) {
-    console.log(error);
     return res.status(400).render("join", {
       pageTitle: "Login",
       errorMessage: error._message,
@@ -151,18 +150,65 @@ export const postEdit = async (req, res) => {
     },
     body: { name, username, email, location },
   } = req;
-  const updateUser = await User.findByIdAndUpdate(
-    _id,
-    {
-      name,
-      username,
-      email,
-      location,
-    },
-    { new: true }
-  );
-  req.session.user = updateUser;
-  return res.redirect("/users/edit");
+  //프로필 수정 중복 확인(username,email)
+  const changeUsername = await User.exists({ username });
+  const changeEmail = await User.exists({ email });
+  if (changeUsername && req.session.user.username !== username) {
+    return res.status(400).render("edit-profile", {
+      pageTitle: "Edit Profile",
+      errorMessage: "해당하는 유져네임은 누군가 사용하고 있는 유져네임입니다.",
+    });
+  } else if (changeEmail && req.session.user.email !== email) {
+    return res.status(400).render("edit-profile", {
+      pageTitle: "Edit Profile",
+      errorMessage: "해당하는 이메일은 누군가 사용하고 있는 이메일입니다.",
+    });
+  } else {
+    const updateUser = await User.findByIdAndUpdate(
+      _id,
+      {
+        name,
+        username,
+        email,
+        location,
+      },
+      { new: true }
+    );
+    req.session.user = updateUser;
+    return res.redirect("/users/edit");
+  }
 };
 
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "기존 비밀번호가 일치하지 않습니다.",
+    });
+  }
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "새로운 비밀번호가 일치하지 않습니다.",
+    });
+  }
+  user.password = newPassword;
+  await user.save();
+  return res.redirect("/users/logout");
+};
 export const see = (req, res) => res.send("See user");
