@@ -28,6 +28,7 @@ export const postJoin = async (req, res) => {
     });
     return res.redirect("/login");
   } catch (error) {
+    console.log(error);
     return res.status(400).render("join", {
       pageTitle: "Login",
       errorMessage: error._message,
@@ -131,14 +132,106 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 
+//카카오 로그인
+export const startKakaoLogin = (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+  const config = {
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: `http://localhost:4000/users/kakao/finish`,
+    response_type: "code",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+
+  return res.redirect(finalUrl);
+};
+
+export const finishKakaoLogin = async (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: "http://localhost:4000/users/kakao/finish",
+    code: req.query.code,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+
+  //토큰 받기
+  const tokenResponse = await (
+    await fetch(finalUrl, {
+      method: "POST",
+    })
+  ).json();
+
+  //토큰 받기
+  if ("access_token" in tokenResponse) {
+    const apiUrl = "https://kapi.kakao.com";
+    const { access_token } = tokenResponse;
+
+    const userToken = await (
+      await fetch(`${apiUrl}/v1/user/access_token_info`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      })
+    ).json();
+
+    //인가코드값이 없다면 로그인창으로 리다이렉트
+    if (userToken.msg === "no authentication key!") {
+      console.log(userToken.msg);
+      return res.redirect("/login");
+    }
+
+    const userData = await (
+      await fetch(`${apiUrl}/v2/user/me`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          target_id_type: "user_id",
+          target_id: userToken.id,
+          Accept: "application/json",
+        },
+      })
+    ).json();
+
+    //카카오 계정
+    const kakaoAccount = userData.kakao_account;
+    const kakaoProfile = kakaoAccount.profile;
+
+    //카카오 이메일 유무 확인
+    if (
+      kakaoAccount.is_email_valid === false ||
+      kakaoAccount.is_email_verified === false
+    ) {
+      console.log("email is not valid or verified");
+      return res.redirect("/login");
+    }
+
+    let user = await User.findOne({ email: kakaoAccount.email });
+    if (!user) {
+      user = await User.create({
+        name: kakaoProfile.nickname,
+        socialOnly: true,
+        username: kakaoProfile.nickname,
+        email: kakaoAccount.email,
+        password: "",
+        avatarUrl: kakaoProfile.profile_image_url,
+      });
+    }
+    req.session.loggedIn = true;
+    req.session.user = user;
+    return res.redirect("/");
+  } else {
+    return res.redirect("/login");
+  }
+};
 //로그아웃
 export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
 };
-
-//카카오 로그인
-
 //프로필 수정
 export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
