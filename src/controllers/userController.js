@@ -1,4 +1,5 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import fetch from "cross-fetch";
 import bcrypt from "bcrypt";
 
@@ -164,7 +165,6 @@ export const finishKakaoLogin = async (req, res) => {
     })
   ).json();
 
-  //토큰 받기
   if ("access_token" in tokenResponse) {
     const apiUrl = "https://kapi.kakao.com";
     const { access_token } = tokenResponse;
@@ -239,9 +239,10 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, username, email, location },
+    file,
   } = req;
   //프로필 수정 중복 확인(username,email)
   const changeUsername = await User.exists({ username });
@@ -260,6 +261,7 @@ export const postEdit = async (req, res) => {
     const updateUser = await User.findByIdAndUpdate(
       _id,
       {
+        avatarUrl: file ? file.path : avatarUrl,
         name,
         username,
         email,
@@ -304,4 +306,17 @@ export const postChangePassword = async (req, res) => {
   await user.save();
   return res.redirect("/users/logout");
 };
-export const see = (req, res) => res.send("See user");
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id).populate("videos");
+  if (!user) {
+    return res
+      .status(404)
+      .render("404", { pageTitle: "유져를 찾지 못했습니다." });
+  }
+
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+  });
+};
