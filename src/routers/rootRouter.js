@@ -7,7 +7,6 @@ import {
 } from "../controllers/userController";
 import { home, search } from "../controllers/videoController";
 import { publicOnlyMiddleware } from "../middlewares";
-
 const rootRouter = express.Router();
 
 rootRouter.get("/", home);
@@ -18,4 +17,5 @@ rootRouter
   .get(getLogin)
   .post(postLogin);
 rootRouter.get("/search", search);
+
 export default rootRouter;

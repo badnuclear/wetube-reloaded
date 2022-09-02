@@ -17,9 +17,6 @@ import { avatarUpload } from "../middlewares";
 
 //언제나 명심할것 미들웨어는 왼쪽에서 오른쪽으로 진행
 const userRouter = express.Router();
-
-userRouter.get("/logout", protectorMiddleware, logout);
-userRouter.get("/:id", see);
 userRouter
   .route("/edit")
   .all(protectorMiddleware)
@@ -30,7 +27,8 @@ userRouter
   .all(protectorMiddleware)
   .get(getChangePassword)
   .post(postChangePassword);
-
+userRouter.get("/:id", see);
+userRouter.get("/logout", protectorMiddleware, logout);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
 userRouter.get("/kakao/start", publicOnlyMiddleware, startKakaoLogin);

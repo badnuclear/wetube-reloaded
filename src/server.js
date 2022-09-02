@@ -23,16 +23,11 @@ app.use(
     store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
-app.use((req, res, next) => {
-  req.sessionStore.all((error, sessions) => {
-    next();
-  });
-});
+
 app.use(localsMiddleware);
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
-
 export default app;
