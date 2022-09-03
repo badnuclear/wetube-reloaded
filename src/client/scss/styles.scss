@@ -1,6 +1,30 @@
-@import "./_variable";
+//임포트
+@import "./config/_variable.scss";
+@import "./config/_reset.scss";
+
+//컴포넌트
+@import "./components/header.scss";
+@import "./components/footer.scss";
+@import "./components/social-login.scss";
+@import "./components/video.scss";
+@import "./components/shared.scss";
+//스크린
+@import "./screens/home.scss";
+//디폴트
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 body {
-  background-color: $skyBlue;
-  color: $white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: $bg;
+  color: $text-color;
+}
+main {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 50px;
 }
