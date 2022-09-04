@@ -8,8 +8,14 @@
 @import "./components/social-login.scss";
 @import "./components/video.scss";
 @import "./components/shared.scss";
+@import "./components/forms.scss";
+
 //스크린
 @import "./screens/home.scss";
+@import "./screens/search.scss";
+@import "./screens/profile.scss";
+@import "./screens/edit-profile.scss";
+
 //디폴트
 a {
   color: inherit;

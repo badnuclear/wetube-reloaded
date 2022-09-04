@@ -1,9 +1,12 @@
 extends ../base.pug
 include ../mixins/video
 
-block content 
- each video in user.videos 
-     +video(video)
- else 
-     li 죄송합니다. 아무것도 찾지 못했습니다.
- 
+block content
+   div.profile__data
+      img(src="/" + user.avatarUrl, alt="").avatar
+      h3=user.name
+   div.video-grid
+     each video in user.videos 
+         +video(video)
+     else 
+         span.empty__message 영상이 없습니다.
