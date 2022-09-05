@@ -22,7 +22,7 @@ header {
       color: white;
     }
     i:hover {
-      color: #0ed2f7;
+      color: #a6b1e1;
       transition: 0.7s;
     }
   }
@@ -35,5 +35,10 @@ header {
   .header__btn:hover {
     background-color: #a6b1e1;
     transition: 0.7s;
+  }
+  .header__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
   }
 }
