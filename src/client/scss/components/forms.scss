@@ -30,9 +30,17 @@ input[type="submit"] {
 }
 .social__btn {
   padding: 13px 0px;
-  text-align: center;
-  color: #eeeeee;
+  text-align: center !important;
+  color: #eeeeee !important;
   cursor: pointer;
   display: block;
+  border: none;
   border-radius: 6px;
+  &:focus {
+    outline: none;
+  }
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
