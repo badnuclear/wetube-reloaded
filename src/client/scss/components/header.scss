@@ -32,6 +32,13 @@ header {
     padding: 5px 10px;
     border-radius: 5px;
   }
+  .header__login-btn {
+    color: white;
+  }
+  .header__login-btn:hover {
+    color: #a6b1e1;
+    transition: 0.7s;
+  }
   .header__btn:hover {
     background-color: #a6b1e1;
     transition: 0.7s;

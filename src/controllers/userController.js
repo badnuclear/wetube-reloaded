@@ -54,6 +54,7 @@ export const postLogin = async (req, res) => {
       errorMessage: "비밀번호가 일치하지 않습니다.",
     });
   }
+  req.flash("success", "Login Success!");
   req.session.loggedIn = true;
   req.session.user = user;
   return res.redirect("/");
@@ -124,6 +125,7 @@ export const finishGithubLogin = async (req, res) => {
         location: userData.location,
       });
     }
+    req.flash("success", "Login Success!");
     req.session.loggedIn = true;
     req.session.user = user;
     console.log(user);
@@ -220,6 +222,7 @@ export const finishKakaoLogin = async (req, res) => {
         avatarUrl: kakaoProfile.profile_image_url,
       });
     }
+    req.flash("success", "Login Success!");
     req.session.loggedIn = true;
     req.session.user = user;
     return res.redirect("/");
@@ -229,6 +232,7 @@ export const finishKakaoLogin = async (req, res) => {
 };
 //로그아웃
 export const logout = (req, res) => {
+  req.flash("info", "Log out");
   req.session.destroy();
   return res.redirect("/");
 };
@@ -276,6 +280,7 @@ export const postEdit = async (req, res) => {
 
 export const getChangePassword = (req, res) => {
   if (req.session.user.socialOnly === true) {
+    req.flash("error", "Can't change password");
     return res.redirect("/");
   }
   return res.render("users/change-password", { pageTitle: "Change Password" });
@@ -303,6 +308,7 @@ export const postChangePassword = async (req, res) => {
     });
   }
   user.password = newPassword;
+  req.flash("info", "Password Change");
   await user.save();
   return res.redirect("/users/logout");
 };
