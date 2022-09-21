@@ -262,10 +262,11 @@ export const postEdit = async (req, res) => {
       errorMessage: "해당하는 이메일은 누군가 사용하고 있는 이메일입니다.",
     });
   } else {
+    const isHeroku = process.env.NODE_ENV === "production";
     const updateUser = await User.findByIdAndUpdate(
       _id,
       {
-        avatarUrl: file ? file.location : avatarUrl,
+        avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
         name,
         username,
         email,
