@@ -33,14 +33,15 @@ block content
    div.video__add-comments 
       form.video__comment-form#commentForm
           textarea(cols="30", rows="10", placeholder="Write a nice comment...")
-          button Add Comment
- div.video__comments 
+          button.video__comment-btn Add Comment
+   div.video__comments 
       ul 
          each comment in video.comments.reverse()
               li.video__comment(data-id=comment.id)
                  i.fas.fa-comment
                  span #{comment.text}
-                 i.fas.fa-square-xmark
+                 span.video__comment-delete#newDeleteCommentBtn(data-id=comment.id)(data-videoId=video.id) X
+                  
 block scripts 
      script(src="/static/js/videoPlayer.js")
      if loggedIn

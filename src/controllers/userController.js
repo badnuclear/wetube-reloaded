@@ -308,8 +308,8 @@ export const postChangePassword = async (req, res) => {
     });
   }
   user.password = newPassword;
-  req.flash("info", "Password Change");
   await user.save();
+  req.flash("info", "Password Change");
   return res.redirect("/users/logout");
 };
 export const see = async (req, res) => {

@@ -19,7 +19,7 @@ header {
     }
     i {
       font-size: 16px;
-      color: white;
+      color: #696969;
     }
     i:hover {
       color: #a6b1e1;
@@ -27,13 +27,13 @@ header {
     }
   }
   .header__btn {
-    background-color: white;
+    background-color: #696969;
     color: $bg;
     padding: 5px 10px;
     border-radius: 5px;
   }
   .header__login-btn {
-    color: white;
+    color: #696969;
   }
   .header__login-btn:hover {
     color: #a6b1e1;
