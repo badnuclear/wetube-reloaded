@@ -26,7 +26,7 @@ const s3VideoUploader = multerS3({
 export const localsMiddleware = (req, res, next) => {
   res.locals.loggedIn = Boolean(req.session.loggedIn);
   res.locals.siteName = "Wetube";
-  res.locals.loggedInUser = req.session.user;
+  res.locals.loggedInUser = req.session.user || {};
   res.locals.isHeroku = isHeroku;
   next();
 };
@@ -55,6 +55,6 @@ export const avatarUpload = multer({
 });
 export const videoUpload = multer({
   dest: "uploads/videos/",
-  limits: { fieldSize: 100000000 },
+  limits: { fieldSize: 104857600 },
   storage: isHeroku ? s3VideoUploader : undefined,
 });
