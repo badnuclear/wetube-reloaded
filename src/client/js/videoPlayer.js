@@ -5,7 +5,7 @@ const muteBtn = document.getElementById("mute");
 const muteBtnIcon = muteBtn.querySelector("i");
 const volumeRange = document.getElementById("volume");
 const currentTime = document.getElementById("currentTime");
-const totalTime = document.getElementById("totalTimeData");
+const totalTime = document.getElementById("totalTime");
 const timeline = document.getElementById("timeline");
 const fullScreenBtn = document.getElementById("fullScreen");
 const fullScreenBtnIcon = fullScreenBtn.querySelector("i");
@@ -53,9 +53,10 @@ const formatTime = (seconds) =>
   new Date(seconds * 1000).toISOString().substring(14, 19);
 
 const handleLoadedMetadata = () => {
-  totalTime.innerText = formatTime(Math.floor(video.duration));
+  totalTime.innerText = formatTime(Math.floor(video.totalTime));
   timeline.max = Math.floor(video.duration);
 };
+
 const handleTimeUpdate = () => {
   currentTime.innerText = formatTime(Math.floor(video.currentTime));
   timeline.value = Math.floor(video.currentTime);
